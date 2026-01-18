@@ -2,7 +2,10 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { Plus, Play, Pause, Trash2, Edit, MoreVertical, Clock, CheckCircle, AlertCircle, Zap } from 'lucide-react';
+import {
+    Plus, Play, Pause, Trash2, Edit, Clock, CheckCircle, AlertCircle, Zap,
+    Workflow, Search, Filter, MoreHorizontal, ArrowUpRight
+} from 'lucide-react';
 import { api, handleApiError } from '@/lib/api';
 
 interface Workflow {
@@ -21,12 +24,12 @@ export default function WorkflowsPage() {
     const [workflows, setWorkflows] = useState<Workflow[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [searchTerm, setSearchTerm] = useState('');
 
     const fetchWorkflows = async () => {
         try {
             setLoading(true);
             const response = await api.get('/v1/workflows');
-            // Backend returns { success: true, data: [...workflows...] } directly
             setWorkflows(response.data.data || []);
             setError(null);
         } catch (err) {
@@ -70,120 +73,197 @@ export default function WorkflowsPage() {
         }
     };
 
-    const getStatusBadge = (status: string) => {
-        const styles = {
-            active: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300',
-            paused: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300',
-            draft: 'bg-slate-100 text-slate-800 dark:bg-slate-700 dark:text-slate-300',
-        };
-        return styles[status as keyof typeof styles] || styles.draft;
+    const filteredWorkflows = workflows.filter(w =>
+        w.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        w.description?.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    const getStatusConfig = (status: string) => {
+        switch (status) {
+            case 'active':
+                return {
+                    bg: 'bg-green-500/10',
+                    border: 'border-green-500/30',
+                    text: 'text-green-400',
+                    dot: 'bg-green-500'
+                };
+            case 'paused':
+                return {
+                    bg: 'bg-yellow-500/10',
+                    border: 'border-yellow-500/30',
+                    text: 'text-yellow-400',
+                    dot: 'bg-yellow-500'
+                };
+            default:
+                return {
+                    bg: 'bg-zinc-500/10',
+                    border: 'border-zinc-500/30',
+                    text: 'text-zinc-400',
+                    dot: 'bg-zinc-500'
+                };
+        }
     };
 
-    const getStatusIcon = (status: string) => {
-        switch (status) {
-            case 'active': return <CheckCircle className="h-4 w-4" />;
-            case 'paused': return <Clock className="h-4 w-4" />;
-            default: return <AlertCircle className="h-4 w-4" />;
+    const getTriggerColor = (type: string) => {
+        switch (type) {
+            case 'manual': return 'from-blue-500 to-cyan-500';
+            case 'webhook': return 'from-violet-500 to-purple-500';
+            case 'schedule': return 'from-orange-500 to-red-500';
+            case 'file_upload': return 'from-green-500 to-emerald-500';
+            default: return 'from-zinc-500 to-zinc-600';
         }
     };
 
     if (loading) {
         return (
             <div className="flex items-center justify-center h-64">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-500"></div>
+                <div className="flex flex-col items-center gap-4">
+                    <div className="relative">
+                        <div className="w-12 h-12 border-2 border-blue-500/30 border-t-blue-500 rounded-full animate-spin" />
+                        <Workflow className="absolute inset-0 m-auto h-5 w-5 text-blue-500" />
+                    </div>
+                    <span className="text-zinc-500 text-sm">Loading workflows...</span>
+                </div>
             </div>
         );
     }
 
     return (
-        <div className="space-y-6">
-            <div className="flex justify-between items-center">
+        <div className="space-y-6 animate-fade-in">
+            {/* Header */}
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div>
-                    <h1 className="text-3xl font-bold">Workflows</h1>
-                    <p className="text-slate-600 dark:text-slate-400">Manage your automation workflows</p>
+                    <h1 className="text-3xl font-bold text-white">Workflows</h1>
+                    <p className="text-zinc-500 mt-1">Manage your automation workflows</p>
                 </div>
-                <Link href="/dashboard/workflows/new" className="btn-primary">
-                    <Plus className="h-5 w-5 mr-2" />
+                <Link href="/dashboard/workflows/new" className="btn-primary flex items-center gap-2">
+                    <Plus className="h-5 w-5" />
                     New Workflow
                 </Link>
             </div>
 
+            {/* Search & Filter Bar */}
+            <div className="flex items-center gap-4">
+                <div className="flex-1 flex items-center gap-3 px-4 py-3 rounded-xl bg-white/[0.03] border border-white/5">
+                    <Search className="h-5 w-5 text-zinc-500" />
+                    <input
+                        type="text"
+                        placeholder="Search workflows..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="flex-1 bg-transparent text-white placeholder:text-zinc-500 focus:outline-none"
+                    />
+                </div>
+                <button className="btn-secondary flex items-center gap-2 px-4 py-3">
+                    <Filter className="h-5 w-5" />
+                    Filter
+                </button>
+            </div>
+
             {error && (
-                <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 px-4 py-3 rounded-lg">
+                <div className="flex items-center gap-3 bg-red-500/10 border border-red-500/20 text-red-400 px-4 py-3 rounded-xl">
+                    <AlertCircle className="h-5 w-5" />
                     {error}
                 </div>
             )}
 
-            {workflows.length === 0 ? (
-                <div className="card text-center py-12">
-                    <div className="h-16 w-16 bg-slate-100 dark:bg-slate-700 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <Plus className="h-8 w-8 text-slate-400" />
+            {filteredWorkflows.length === 0 ? (
+                <div className="card text-center py-16">
+                    <div className="h-20 w-20 rounded-2xl bg-gradient-to-br from-blue-500/20 to-violet-500/20 flex items-center justify-center mx-auto mb-6">
+                        <Workflow className="h-10 w-10 text-blue-400" />
                     </div>
-                    <h3 className="text-xl font-semibold mb-2">No workflows yet</h3>
-                    <p className="text-slate-500 mb-4">Create your first workflow to start automating</p>
-                    <Link href="/dashboard/workflows/new" className="btn-primary inline-flex">
-                        <Plus className="h-5 w-5 mr-2" />
+                    <h3 className="text-xl font-semibold text-white mb-2">No workflows yet</h3>
+                    <p className="text-zinc-500 mb-6 max-w-sm mx-auto">
+                        Create your first workflow to start automating your document processing
+                    </p>
+                    <Link href="/dashboard/workflows/new" className="btn-primary inline-flex items-center gap-2">
+                        <Plus className="h-5 w-5" />
                         Create Workflow
                     </Link>
                 </div>
             ) : (
                 <div className="grid gap-4">
-                    {workflows.map((workflow) => (
-                        <div key={workflow.id} className="card hover:shadow-lg transition-shadow">
-                            <div className="flex items-center justify-between">
-                                <Link href={`/dashboard/workflows/${workflow.id}`} className="flex-1 cursor-pointer">
-                                    <div className="flex items-center gap-3 mb-2">
-                                        <h3 className="text-lg font-semibold">{workflow.name}</h3>
-                                        <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${getStatusBadge(workflow.status)}`}>
-                                            {getStatusIcon(workflow.status)}
-                                            {workflow.status}
-                                        </span>
+                    {filteredWorkflows.map((workflow) => {
+                        const statusConfig = getStatusConfig(workflow.status);
+                        const triggerColor = getTriggerColor(workflow.trigger?.type || 'manual');
+
+                        return (
+                            <div
+                                key={workflow.id}
+                                className="card group hover:border-white/10 transition-all duration-300"
+                            >
+                                <div className="flex items-center justify-between gap-4">
+                                    {/* Left side - Info */}
+                                    <div className="flex items-center gap-4 flex-1 min-w-0">
+                                        {/* Trigger Icon */}
+                                        <div className={`h-12 w-12 rounded-xl bg-gradient-to-br ${triggerColor} flex items-center justify-center shadow-lg flex-shrink-0`}>
+                                            <Zap className="h-6 w-6 text-white" />
+                                        </div>
+
+                                        {/* Content */}
+                                        <div className="flex-1 min-w-0">
+                                            <div className="flex items-center gap-3 mb-1">
+                                                <Link
+                                                    href={`/dashboard/workflows/${workflow.id}`}
+                                                    className="text-lg font-semibold text-white hover:text-blue-400 transition-colors truncate"
+                                                >
+                                                    {workflow.name}
+                                                </Link>
+                                                <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium ${statusConfig.bg} ${statusConfig.border} border ${statusConfig.text}`}>
+                                                    <span className={`w-1.5 h-1.5 rounded-full ${statusConfig.dot}`} />
+                                                    {workflow.status}
+                                                </span>
+                                            </div>
+                                            <p className="text-zinc-500 text-sm truncate mb-2">
+                                                {workflow.description || 'No description'}
+                                            </p>
+                                            <div className="flex items-center gap-4 text-xs text-zinc-600">
+                                                <span className="capitalize">Trigger: {workflow.trigger?.type || 'manual'}</span>
+                                                <span>•</span>
+                                                <span>Updated: {new Date(workflow.updatedAt).toLocaleDateString()}</span>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <p className="text-slate-500 text-sm mb-2">
-                                        {workflow.description || 'No description'}
-                                    </p>
-                                    <div className="flex items-center gap-4 text-xs text-slate-400">
-                                        <span>Trigger: {workflow.trigger?.type || 'manual'}</span>
-                                        <span>Updated: {new Date(workflow.updatedAt).toLocaleDateString()}</span>
+
+                                    {/* Right side - Actions */}
+                                    <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <button
+                                            onClick={() => handleRun(workflow.id)}
+                                            className="p-2.5 rounded-lg bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 transition-colors"
+                                            title="Run workflow now"
+                                        >
+                                            <Zap className="h-5 w-5" />
+                                        </button>
+                                        <button
+                                            onClick={() => handleToggleStatus(workflow.id, workflow.status)}
+                                            className="p-2.5 rounded-lg hover:bg-white/5 text-zinc-400 hover:text-white transition-colors"
+                                            title={workflow.status === 'active' ? 'Pause workflow' : 'Activate workflow'}
+                                        >
+                                            {workflow.status === 'active' ? (
+                                                <Pause className="h-5 w-5" />
+                                            ) : (
+                                                <Play className="h-5 w-5" />
+                                            )}
+                                        </button>
+                                        <Link
+                                            href={`/dashboard/workflows/${workflow.id}`}
+                                            className="p-2.5 rounded-lg hover:bg-white/5 text-zinc-400 hover:text-white transition-colors"
+                                            title="Edit workflow"
+                                        >
+                                            <Edit className="h-5 w-5" />
+                                        </Link>
+                                        <button
+                                            onClick={() => handleDelete(workflow.id)}
+                                            className="p-2.5 rounded-lg hover:bg-red-500/10 text-zinc-400 hover:text-red-400 transition-colors"
+                                            title="Delete workflow"
+                                        >
+                                            <Trash2 className="h-5 w-5" />
+                                        </button>
                                     </div>
-                                </Link>
-                                <div className="flex items-center gap-2">
-                                    <button
-                                        onClick={() => handleRun(workflow.id)}
-                                        className="p-2 hover:bg-primary-50 dark:hover:bg-primary-900/20 rounded-lg"
-                                        title="Run workflow now"
-                                    >
-                                        <Zap className="h-5 w-5 text-primary-500" />
-                                    </button>
-                                    <button
-                                        onClick={() => handleToggleStatus(workflow.id, workflow.status)}
-                                        className="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg"
-                                        title={workflow.status === 'active' ? 'Pause workflow' : 'Activate workflow'}
-                                    >
-                                        {workflow.status === 'active' ? (
-                                            <Pause className="h-5 w-5 text-yellow-500" />
-                                        ) : (
-                                            <Play className="h-5 w-5 text-green-500" />
-                                        )}
-                                    </button>
-                                    <Link
-                                        href={`/dashboard/workflows/${workflow.id}`}
-                                        className="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg"
-                                        title="Edit workflow"
-                                    >
-                                        <Edit className="h-5 w-5 text-slate-500" />
-                                    </Link>
-                                    <button
-                                        onClick={() => handleDelete(workflow.id)}
-                                        className="p-2 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg"
-                                        title="Delete workflow"
-                                    >
-                                        <Trash2 className="h-5 w-5 text-red-500" />
-                                    </button>
                                 </div>
                             </div>
-                        </div>
-                    ))}
+                        );
+                    })}
                 </div>
             )}
         </div>

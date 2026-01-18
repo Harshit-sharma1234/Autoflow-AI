@@ -115,8 +115,14 @@ documentWorker.on('failed', (job, err) => {
     logger.error({ jobId: job?.id, error: err.message }, 'Document worker job failed');
 });
 
+let docWorkerErrorLogged = false;
 documentWorker.on('error', (err) => {
-    logger.error({ error: err.message }, 'Document worker error');
+    if (!docWorkerErrorLogged && process.env.NODE_ENV === 'development') {
+        docWorkerErrorLogged = true;
+        logger.warn('Document worker using in-memory mock - async document processing disabled');
+    } else if (process.env.NODE_ENV !== 'development') {
+        logger.error({ error: err.message }, 'Document worker error');
+    }
 });
 
 export default documentWorker;

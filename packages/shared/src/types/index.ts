@@ -65,6 +65,7 @@ export enum TriggerType {
 }
 
 export enum StepType {
+    DOCUMENT_PROCESS = 'document_process',
     AI_PROCESS = 'ai_process',
     EMAIL = 'email',
     WEBHOOK = 'webhook',

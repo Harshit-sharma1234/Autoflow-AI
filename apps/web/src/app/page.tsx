@@ -1,30 +1,34 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import {
-    Zap,
-    FileText,
-    Brain,
-    Workflow,
-    ArrowRight,
-    CheckCircle,
-    Sparkles
+    Zap, FileText, Brain, Workflow, ArrowRight, Sparkles, Cpu,
+    Layers, BarChart3, Shield, Rocket, ChevronRight, Check
 } from 'lucide-react';
 
 export default function HomePage() {
     return (
-        <div className="min-h-screen">
+        <div className="min-h-screen bg-[#000000]">
             {/* Navigation */}
-            <nav className="fixed top-0 w-full z-50 glass border-b border-slate-200 dark:border-slate-700">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <nav className="fixed top-0 w-full z-50 bg-black/80 backdrop-blur-md border-b border-white/5">
+                <div className="max-w-6xl mx-auto px-6">
                     <div className="flex justify-between items-center h-16">
-                        <div className="flex items-center space-x-2">
-                            <Zap className="h-8 w-8 text-primary-500" />
-                            <span className="text-xl font-bold gradient-text">AutoFlow AI</span>
+                        <div className="flex items-center gap-2">
+                            <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center">
+                                <Zap className="h-4 w-4 text-white" />
+                            </div>
+                            <span className="font-bold text-white">AutoFlow AI</span>
                         </div>
-                        <div className="flex items-center space-x-4">
-                            <Link href="/login" className="btn-ghost">
+                        <div className="hidden md:flex items-center gap-8">
+                            <a href="#features" className="text-sm text-zinc-400 hover:text-white transition-colors">Features</a>
+                            <a href="#how-it-works" className="text-sm text-zinc-400 hover:text-white transition-colors">How it Works</a>
+                            <a href="#" className="text-sm text-zinc-400 hover:text-white transition-colors">Pricing</a>
+                            <a href="#" className="text-sm text-zinc-400 hover:text-white transition-colors">Docs</a>
+                        </div>
+                        <div className="flex items-center gap-4">
+                            <Link href="/login" className="text-sm text-zinc-400 hover:text-white transition-colors">
                                 Sign In
                             </Link>
-                            <Link href="/register" className="btn-primary">
+                            <Link href="/register" className="btn-primary text-sm">
                                 Get Started
                             </Link>
                         </div>
@@ -32,104 +36,130 @@ export default function HomePage() {
                 </div>
             </nav>
 
-            {/* Hero Section */}
-            <section className="pt-32 pb-20 px-4">
-                <div className="max-w-7xl mx-auto">
-                    <div className="text-center">
-                        <div className="inline-flex items-center rounded-full border border-primary-200 bg-primary-50 px-4 py-1.5 text-sm text-primary-700 dark:border-primary-800 dark:bg-primary-900/30 dark:text-primary-300 mb-6">
-                            <Sparkles className="h-4 w-4 mr-2" />
-                            Powered by Advanced AI
+            {/* Hero Section with Background Image */}
+            <section className="relative min-h-screen flex items-center justify-center px-6">
+                {/* Background Image */}
+                <div className="absolute inset-0 z-0">
+                    <Image
+                        src="/hero-bg.jpg"
+                        alt=""
+                        fill
+                        className="object-cover object-center"
+                        priority
+                    />
+                    {/* Gradient overlay for text readability */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-black/40" />
+                </div>
+
+                <div className="relative z-10 max-w-4xl mx-auto text-center pt-16">
+                    {/* Badge */}
+                    <div className="inline-flex items-center rounded-full border border-blue-500/30 bg-blue-500/10 backdrop-blur-sm px-4 py-1.5 text-sm text-blue-400 mb-8">
+                        <Sparkles className="h-4 w-4 mr-2" />
+                        Powered by Next-Gen AI
+                    </div>
+
+                    {/* Headline */}
+                    <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6">
+                        <span className="text-white">Automate Workflows with</span>
+                        <br />
+                        <span className="bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-500 bg-clip-text text-transparent">Intelligent AI</span>
+                    </h1>
+
+                    {/* Subheadline */}
+                    <p className="text-lg md:text-xl text-zinc-300 max-w-2xl mx-auto mb-10 leading-relaxed">
+                        Upload documents, extract insights with AI, and trigger automated actions.
+                        Build powerful workflows in minutes, not hours.
+                    </p>
+
+                    {/* CTA Buttons */}
+                    <div className="flex flex-col sm:flex-row justify-center gap-4">
+                        <Link href="/register" className="btn-primary px-8 py-3.5 text-base">
+                            Start Free Trial
+                            <ArrowRight className="ml-2 h-5 w-5" />
+                        </Link>
+                        <Link href="#how-it-works" className="btn-secondary px-8 py-3.5 text-base backdrop-blur-sm">
+                            See How It Works
+                        </Link>
+                    </div>
+
+                    {/* Stats */}
+                    <div className="mt-20 grid grid-cols-3 gap-8 max-w-md mx-auto">
+                        <div className="text-center">
+                            <div className="text-2xl md:text-3xl font-bold text-white">10x</div>
+                            <div className="text-xs text-zinc-400 mt-1">Faster</div>
                         </div>
-                        <h1 className="text-5xl md:text-6xl font-bold tracking-tight mb-6">
-                            Automate Workflows with
-                            <span className="gradient-text block">Intelligent AI</span>
-                        </h1>
-                        <p className="text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto mb-10">
-                            Upload documents, extract insights with AI, and trigger automated actions.
-                            Build powerful workflows in minutes, not hours.
-                        </p>
-                        <div className="flex justify-center gap-4">
-                            <Link href="/register" className="btn-primary text-lg px-8 py-3">
-                                Start Free Trial
-                                <ArrowRight className="ml-2 h-5 w-5" />
-                            </Link>
-                            <Link href="#features" className="btn-secondary text-lg px-8 py-3">
-                                See How It Works
-                            </Link>
+                        <div className="text-center">
+                            <div className="text-2xl md:text-3xl font-bold text-white">99%</div>
+                            <div className="text-xs text-zinc-400 mt-1">Accuracy</div>
+                        </div>
+                        <div className="text-center">
+                            <div className="text-2xl md:text-3xl font-bold text-white">24/7</div>
+                            <div className="text-xs text-zinc-400 mt-1">Automation</div>
                         </div>
                     </div>
                 </div>
             </section>
 
             {/* Features Section */}
-            <section id="features" className="py-20 bg-slate-100 dark:bg-slate-800/50">
-                <div className="max-w-7xl mx-auto px-4">
+            <section id="features" className="py-24 px-6 bg-[#09090b]">
+                <div className="max-w-6xl mx-auto">
                     <div className="text-center mb-16">
-                        <h2 className="text-3xl font-bold mb-4">Everything You Need</h2>
-                        <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
+                        <h2 className="text-3xl font-bold text-white mb-4">
+                            Everything You Need
+                        </h2>
+                        <p className="text-zinc-400 max-w-xl mx-auto">
                             A complete platform for AI-powered document processing and workflow automation.
                         </p>
                     </div>
 
-                    <div className="grid md:grid-cols-3 gap-8">
-                        {/* Feature 1 */}
-                        <div className="card hover:shadow-lg transition-shadow">
-                            <div className="h-12 w-12 rounded-lg bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center mb-4">
-                                <FileText className="h-6 w-6 text-primary-600 dark:text-primary-400" />
+                    <div className="grid md:grid-cols-3 gap-6">
+                        {[
+                            { icon: FileText, title: 'Document Processing', desc: 'Upload PDFs, images, and text files with accurate AI extraction.', color: 'blue' },
+                            { icon: Brain, title: 'AI Analysis', desc: 'Extract structured data and generate insights using advanced AI.', color: 'violet' },
+                            { icon: Workflow, title: 'Automated Workflows', desc: 'Trigger emails, webhooks, or save data automatically.', color: 'cyan' },
+                            { icon: Cpu, title: 'Multiple AI Providers', desc: 'Choose from OpenAI, Google Gemini, or Groq.', color: 'orange' },
+                            { icon: BarChart3, title: 'Analytics Dashboard', desc: 'Monitor workflow performance and track runs.', color: 'pink' },
+                            { icon: Shield, title: 'Enterprise Security', desc: 'End-to-end encryption and role-based access.', color: 'teal' },
+                        ].map((feature, i) => (
+                            <div key={i} className="card-glow p-6">
+                                <div className={`h-10 w-10 rounded-lg bg-${feature.color}-500/10 flex items-center justify-center mb-4`}>
+                                    <feature.icon className={`h-5 w-5 text-${feature.color}-400`} />
+                                </div>
+                                <h3 className="text-lg font-semibold text-white mb-2">{feature.title}</h3>
+                                <p className="text-sm text-zinc-400">{feature.desc}</p>
                             </div>
-                            <h3 className="text-xl font-semibold mb-2">Document Processing</h3>
-                            <p className="text-slate-600 dark:text-slate-400">
-                                Upload PDFs, text files, and more. Our system extracts content automatically.
-                            </p>
-                        </div>
-
-                        {/* Feature 2 */}
-                        <div className="card hover:shadow-lg transition-shadow">
-                            <div className="h-12 w-12 rounded-lg bg-accent-100 dark:bg-accent-900/30 flex items-center justify-center mb-4">
-                                <Brain className="h-6 w-6 text-accent-600 dark:text-accent-400" />
-                            </div>
-                            <h3 className="text-xl font-semibold mb-2">AI Analysis</h3>
-                            <p className="text-slate-600 dark:text-slate-400">
-                                Extract structured data, classify content, and generate insights with AI.
-                            </p>
-                        </div>
-
-                        {/* Feature 3 */}
-                        <div className="card hover:shadow-lg transition-shadow">
-                            <div className="h-12 w-12 rounded-lg bg-green-100 dark:bg-green-900/30 flex items-center justify-center mb-4">
-                                <Workflow className="h-6 w-6 text-green-600 dark:text-green-400" />
-                            </div>
-                            <h3 className="text-xl font-semibold mb-2">Automated Workflows</h3>
-                            <p className="text-slate-600 dark:text-slate-400">
-                                Trigger emails, webhooks, or save data based on AI-analyzed results.
-                            </p>
-                        </div>
+                        ))}
                     </div>
                 </div>
             </section>
 
-            {/* How It Works Section */}
-            <section className="py-20">
-                <div className="max-w-7xl mx-auto px-4">
+            {/* How It Works */}
+            <section id="how-it-works" className="py-24 px-6 bg-black">
+                <div className="max-w-6xl mx-auto">
                     <div className="text-center mb-16">
-                        <h2 className="text-3xl font-bold mb-4">How It Works</h2>
-                        <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
+                        <h2 className="text-3xl font-bold text-white mb-4">
+                            How It Works
+                        </h2>
+                        <p className="text-zinc-400 max-w-xl mx-auto">
                             Three simple steps to automate your document workflows.
                         </p>
                     </div>
 
-                    <div className="grid md:grid-cols-3 gap-8">
+                    <div className="grid md:grid-cols-3 gap-12">
                         {[
-                            { step: '01', title: 'Upload', desc: 'Upload your documents or connect data sources' },
-                            { step: '02', title: 'Process', desc: 'AI analyzes and extracts structured data' },
-                            { step: '03', title: 'Automate', desc: 'Trigger actions based on the results' },
+                            { step: '1', title: 'Upload', desc: 'Upload documents or connect to data sources like S3, Drive, or webhooks.', icon: Layers },
+                            { step: '2', title: 'Process', desc: 'AI analyzes and extracts structured data using your custom prompts.', icon: Brain },
+                            { step: '3', title: 'Automate', desc: 'Trigger emails, API calls, or database writes based on results.', icon: Zap },
                         ].map((item, i) => (
                             <div key={i} className="text-center">
-                                <div className="text-6xl font-bold text-slate-100 dark:text-slate-800 mb-4">
-                                    {item.step}
+                                <div className="relative inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-zinc-900 border border-blue-500/20 mb-6">
+                                    <item.icon className="h-7 w-7 text-blue-400" />
+                                    <div className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-blue-600 flex items-center justify-center text-xs font-bold text-white">
+                                        {item.step}
+                                    </div>
                                 </div>
-                                <h3 className="text-xl font-semibold mb-2">{item.title}</h3>
-                                <p className="text-slate-600 dark:text-slate-400">{item.desc}</p>
+                                <h3 className="text-lg font-semibold text-white mb-2">{item.title}</h3>
+                                <p className="text-sm text-zinc-400">{item.desc}</p>
                             </div>
                         ))}
                     </div>
@@ -137,31 +167,38 @@ export default function HomePage() {
             </section>
 
             {/* CTA Section */}
-            <section className="py-20 bg-gradient-to-r from-primary-500 to-accent-500">
-                <div className="max-w-4xl mx-auto px-4 text-center">
-                    <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-                        Ready to Automate Your Workflows?
-                    </h2>
-                    <p className="text-lg text-white/80 mb-8">
-                        Start your free trial today. No credit card required.
-                    </p>
-                    <Link href="/register" className="inline-flex items-center rounded-lg bg-white px-8 py-3 text-lg font-medium text-primary-600 hover:bg-slate-100 transition-colors">
-                        Get Started Free
-                        <ArrowRight className="ml-2 h-5 w-5" />
-                    </Link>
+            <section className="py-24 px-6 bg-[#09090b]">
+                <div className="max-w-3xl mx-auto">
+                    <div className="rounded-2xl bg-zinc-900/50 border border-blue-500/10 p-8 md:p-12 text-center">
+                        <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
+                            Ready to Automate Your Workflows?
+                        </h2>
+                        <p className="text-zinc-400 mb-8 max-w-md mx-auto">
+                            Start your free trial today. No credit card required.
+                        </p>
+                        <Link href="/register" className="btn-primary px-6 py-3">
+                            Get Started Free
+                            <ArrowRight className="ml-2 h-4 w-4" />
+                        </Link>
+                    </div>
                 </div>
             </section>
 
             {/* Footer */}
-            <footer className="py-12 border-t border-slate-200 dark:border-slate-700">
-                <div className="max-w-7xl mx-auto px-4">
-                    <div className="flex flex-col md:flex-row justify-between items-center">
-                        <div className="flex items-center space-x-2 mb-4 md:mb-0">
-                            <Zap className="h-6 w-6 text-primary-500" />
-                            <span className="font-semibold">AutoFlow AI</span>
+            <footer className="py-8 px-6 border-t border-white/5 bg-black">
+                <div className="max-w-6xl mx-auto">
+                    <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+                        <div className="flex items-center gap-2">
+                            <Zap className="h-5 w-5 text-blue-500" />
+                            <span className="font-semibold text-white">AutoFlow AI</span>
                         </div>
-                        <p className="text-sm text-slate-500">
-                            © {new Date().getFullYear()} AutoFlow AI. All rights reserved.
+                        <div className="flex items-center gap-6">
+                            <a href="#" className="text-sm text-zinc-500 hover:text-white transition-colors">Privacy</a>
+                            <a href="#" className="text-sm text-zinc-500 hover:text-white transition-colors">Terms</a>
+                            <a href="#" className="text-sm text-zinc-500 hover:text-white transition-colors">Docs</a>
+                        </div>
+                        <p className="text-sm text-zinc-600">
+                            © {new Date().getFullYear()} AutoFlow AI
                         </p>
                     </div>
                 </div>

@@ -9,6 +9,9 @@ export const metadata: Metadata = {
     title: 'AutoFlow AI - Intelligent Automation Platform',
     description: 'Upload documents, process with AI, and automate workflows.',
     keywords: ['AI', 'automation', 'workflow', 'document processing'],
+    icons: {
+        icon: '/favicon.svg',
+    },
 };
 
 export default function RootLayout({

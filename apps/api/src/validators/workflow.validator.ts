@@ -2,6 +2,12 @@ import { z } from 'zod';
 import { TriggerType, StepType, WorkflowStatus } from '@autoflow/shared';
 
 // Step configuration schemas based on step type
+const documentProcessConfigSchema = z.object({
+    outputFormat: z.enum(['text', 'json', 'markdown']).optional(),
+    extractImages: z.boolean().optional(),
+    ocr: z.boolean().optional(),
+});
+
 const aiProcessConfigSchema = z.object({
     prompt: z.string().min(1, 'Prompt is required'),
     model: z.string().optional(),
@@ -65,6 +71,13 @@ const transformConfigSchema = z.object({
 
 // Workflow step schema with discriminated union for config validation
 const workflowStepSchema = z.discriminatedUnion('type', [
+    z.object({
+        name: z.string().min(1, 'Step name is required'),
+        type: z.literal(StepType.DOCUMENT_PROCESS),
+        config: documentProcessConfigSchema,
+        nextStepId: z.string().optional(),
+        onErrorStepId: z.string().optional(),
+    }),
     z.object({
         name: z.string().min(1, 'Step name is required'),
         type: z.literal(StepType.AI_PROCESS),

@@ -165,8 +165,14 @@ actionWorker.on('failed', (job, err) => {
     logger.error({ jobId: job?.id, error: err.message }, 'Action worker job failed');
 });
 
+let actionWorkerErrorLogged = false;
 actionWorker.on('error', (err) => {
-    logger.error({ error: err.message }, 'Action worker error');
+    if (!actionWorkerErrorLogged && process.env.NODE_ENV === 'development') {
+        actionWorkerErrorLogged = true;
+        logger.warn('Action worker using in-memory mock - async action processing disabled');
+    } else if (process.env.NODE_ENV !== 'development') {
+        logger.error({ error: err.message }, 'Action worker error');
+    }
 });
 
 export default actionWorker;

@@ -27,9 +27,18 @@ export const connectDatabase = async (): Promise<void> => {
         });
 
     } catch (error) {
-        logger.error('Failed to connect to MongoDB:', error);
+        console.error("🔥🔥🔥 REAL MONGO ERROR OBJECT:", error);
+
+        if (error instanceof Error) {
+            console.error("🔥 MESSAGE:", error.message);
+            console.error("🔥 NAME:", error.name);
+            // @ts-ignore
+            console.error("🔥 STACK:", error.stack);
+        }
+
         process.exit(1);
     }
+
 };
 
 export const disconnectDatabase = async (): Promise<void> => {

@@ -56,10 +56,19 @@ export const actionQueue = new Queue(QUEUE_NAMES.ACTION_EXECUTION, {
     },
 });
 
-// Log queue events
+// Log queue events (suppress spam in dev mode with in-memory Redis)
+const loggedQueueErrors = new Set<string>();
 [documentQueue, aiQueue, actionQueue].forEach((queue) => {
     queue.on('error', (err) => {
-        logger.error({ queue: queue.name, error: err.message }, 'Queue error');
+        // Only log each queue error once to avoid spam
+        if (!loggedQueueErrors.has(queue.name)) {
+            loggedQueueErrors.add(queue.name);
+            if (process.env.NODE_ENV !== 'development') {
+                logger.error({ queue: queue.name, error: err.message }, 'Queue error');
+            } else {
+                logger.warn({ queue: queue.name }, 'Queue using in-memory mock - some features disabled');
+            }
+        }
     });
 });
 

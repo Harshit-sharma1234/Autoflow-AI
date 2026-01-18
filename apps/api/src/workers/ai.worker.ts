@@ -93,8 +93,14 @@ aiWorker.on('failed', (job, err) => {
     logger.error({ jobId: job?.id, error: err.message }, 'AI worker job failed');
 });
 
+let aiWorkerErrorLogged = false;
 aiWorker.on('error', (err) => {
-    logger.error({ error: err.message }, 'AI worker error');
+    if (!aiWorkerErrorLogged && process.env.NODE_ENV === 'development') {
+        aiWorkerErrorLogged = true;
+        logger.warn('AI worker using in-memory mock - async AI processing disabled');
+    } else if (process.env.NODE_ENV !== 'development') {
+        logger.error({ error: err.message }, 'AI worker error');
+    }
 });
 
 export default aiWorker;

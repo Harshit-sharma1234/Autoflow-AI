@@ -1,9 +1,12 @@
+import 'dotenv/config';
+
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import createApp from './app';
 import config from './config';
 import { connectDatabase, disconnectDatabase } from './config/database';
 import { logger } from './utils/logger';
 import { closeQueues } from './queues';
+console.log("MONGO FROM ENV =>", process.env.MONGODB_URI);
 
 let mongoServer: MongoMemoryServer | null = null;
 
