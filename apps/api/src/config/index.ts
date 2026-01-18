@@ -59,7 +59,7 @@ const config: Config = {
     port: parseInt(process.env.PORT || '4000', 10),
 
     mongodb: {
-        uri: process.env.MONGODB_URI || (process.env.NODE_ENV === 'development' ? '' : 'mongodb://localhost:27017/autoflow'),
+        uri: process.env.MONGODB_URI || '',
     },
 
     redis: {
@@ -120,10 +120,14 @@ if (config.env === 'production') {
         { key: 'MONGODB_URI', value: config.mongodb.uri },
     ];
 
-    for (const { key, value, default: defaultValue } of required) {
-        if (!value || value === defaultValue) {
-            throw new Error(`Missing or default value for required config: ${key}`);
-        }
+    const missing = required
+        .filter(({ value, default: defaultValue }) => !value || value === defaultValue)
+        .map(({ key }) => key);
+
+    if (missing.length > 0) {
+        console.error('❌ FATAL ERROR: Missing required environment variables:');
+        missing.forEach(key => console.error(`   - ${key}`));
+        throw new Error(`Missing required configuration: ${missing.join(', ')}`);
     }
 }
 
