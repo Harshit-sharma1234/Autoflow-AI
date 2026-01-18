@@ -13,10 +13,9 @@ const createApp = (): Application => {
     app.use(helmet());
 
     // CORS configuration
+    // CORS configuration
     app.use(cors({
-        origin: config.env === 'production'
-            ? ['https://autoflow.ai'] // Replace with actual frontend URL
-            : ['http://localhost:3000', 'http://localhost:3001'],
+        origin: config.corsOrigin === '*' ? true : config.corsOrigin.split(','),
         credentials: true,
         methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
         allowedHeaders: ['Content-Type', 'Authorization', 'X-Request-Id'],

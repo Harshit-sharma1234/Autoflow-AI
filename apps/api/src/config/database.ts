@@ -4,6 +4,10 @@ import { logger } from '../utils/logger';
 
 export const connectDatabase = async (): Promise<void> => {
     try {
+        if (mongoose.connection.readyState >= 1) {
+            return;
+        }
+
         mongoose.set('strictQuery', true);
 
         await mongoose.connect(config.mongodb.uri, {
@@ -36,9 +40,8 @@ export const connectDatabase = async (): Promise<void> => {
             console.error("🔥 STACK:", error.stack);
         }
 
-        process.exit(1);
+        throw error;
     }
-
 };
 
 export const disconnectDatabase = async (): Promise<void> => {

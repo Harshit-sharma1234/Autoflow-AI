@@ -51,6 +51,7 @@ interface Config {
     logging: {
         level: string;
     };
+    corsOrigin: string;
 }
 
 const config: Config = {
@@ -108,6 +109,7 @@ const config: Config = {
     logging: {
         level: process.env.LOG_LEVEL || 'info',
     },
+    corsOrigin: process.env.CORS_ORIGIN || '*',
 };
 
 // Validate required config in production
