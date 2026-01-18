@@ -5,7 +5,7 @@ import { asyncHandler } from '../middleware/error.middleware';
 import { validateRequest } from '../middleware/validation.middleware';
 import { createWorkflowSchema, updateWorkflowSchema } from '../validators/workflow.validator';
 
-const router = Router();
+const router: Router = Router();
 const workflowController = new WorkflowController();
 
 // All workflow routes require authentication

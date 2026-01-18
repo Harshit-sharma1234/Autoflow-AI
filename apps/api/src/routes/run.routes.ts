@@ -3,7 +3,7 @@ import { RunController } from '../controllers/run.controller';
 import { authenticate } from '../middleware/auth.middleware';
 import { asyncHandler } from '../middleware/error.middleware';
 
-const router = Router();
+const router: Router = Router();
 const runController = new RunController();
 
 // All run routes require authentication

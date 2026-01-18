@@ -5,7 +5,7 @@ import workflowRoutes from './workflow.routes';
 import runRoutes from './run.routes';
 import fileRoutes from './file.routes';
 
-const router = Router();
+const router: Router = Router();
 
 // API version prefix
 const API_VERSION = '/v1';

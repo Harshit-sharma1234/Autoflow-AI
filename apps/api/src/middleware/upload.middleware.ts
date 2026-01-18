@@ -23,12 +23,12 @@ const fileFilter = (
 ) => {
     const ext = path.extname(file.originalname).toLowerCase();
 
-    if (!FILE_UPLOAD.ALLOWED_EXTENSIONS.includes(ext)) {
+    if (!FILE_UPLOAD.ALLOWED_EXTENSIONS.includes(ext as any)) {
         cb(new ValidationError(`File type ${ext} is not allowed`));
         return;
     }
 
-    if (!FILE_UPLOAD.ALLOWED_TYPES.includes(file.mimetype)) {
+    if (!FILE_UPLOAD.ALLOWED_TYPES.includes(file.mimetype as any)) {
         cb(new ValidationError(`MIME type ${file.mimetype} is not allowed`));
         return;
     }

@@ -1,6 +1,6 @@
 import mongoose, { Document, Schema, Types } from 'mongoose';
 
-export interface IAIOutputDocument extends Document {
+export interface IAIOutputDocument extends Omit<Document, 'model'> {
     runId: Types.ObjectId;
     stepId: string;
     model: string;
@@ -68,8 +68,8 @@ const aiOutputSchema = new Schema<IAIOutputDocument>(
         toJSON: {
             transform: (doc, ret) => {
                 ret.id = ret._id.toString();
-                delete ret._id;
-                delete ret.__v;
+                delete (ret as any)._id;
+                delete (ret as any).__v;
                 return ret;
             },
         },

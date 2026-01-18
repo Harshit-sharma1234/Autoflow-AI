@@ -130,16 +130,16 @@ export class AuthService {
         };
 
         // Generate access token
-        const accessToken = jwt.sign(payload, config.jwt.secret, {
-            expiresIn: config.jwt.expiresIn,
+        const accessToken = jwt.sign(payload, config.jwt.secret as any, {
+            expiresIn: config.jwt.expiresIn as any,
         });
 
         // Generate refresh token with unique ID
         const jti = uuidv4();
         const refreshToken = jwt.sign(
             { ...payload, jti },
-            config.jwt.refreshSecret,
-            { expiresIn: config.jwt.refreshExpiresIn }
+            config.jwt.refreshSecret as any,
+            { expiresIn: config.jwt.refreshExpiresIn as any }
         );
 
         // Store refresh token JTI in Redis

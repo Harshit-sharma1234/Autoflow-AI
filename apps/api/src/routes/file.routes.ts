@@ -4,7 +4,7 @@ import { authenticate } from '../middleware/auth.middleware';
 import { asyncHandler } from '../middleware/error.middleware';
 import { uploadMiddleware } from '../middleware/upload.middleware';
 
-const router = Router();
+const router: Router = Router();
 const fileController = new FileController();
 
 // All file routes require authentication

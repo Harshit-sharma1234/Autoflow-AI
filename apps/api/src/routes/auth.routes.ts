@@ -6,7 +6,7 @@ import { authenticate } from '../middleware/auth.middleware';
 import { validateRequest } from '../middleware/validation.middleware';
 import { registerSchema, loginSchema, refreshTokenSchema } from '../validators/auth.validator';
 
-const router = Router();
+const router: Router = Router();
 const authController = new AuthController();
 
 // Apply rate limiting to auth routes
