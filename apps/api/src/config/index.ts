@@ -112,23 +112,24 @@ const config: Config = {
     corsOrigin: process.env.CORS_ORIGIN || '*',
 };
 
-// Validate required config in production
-if (config.env === 'production') {
-    const required = [
-        { key: 'JWT_SECRET', value: config.jwt.secret, default: 'default-secret-change-me' },
-        { key: 'REFRESH_TOKEN_SECRET', value: config.jwt.refreshSecret, default: 'default-refresh-secret-change-me' },
-        { key: 'MONGODB_URI', value: config.mongodb.uri },
-    ];
+export const validateConfig = () => {
+    if (config.env === 'production') {
+        const required = [
+            { key: 'JWT_SECRET', value: config.jwt.secret, default: 'default-secret-change-me' },
+            { key: 'REFRESH_TOKEN_SECRET', value: config.jwt.refreshSecret, default: 'default-refresh-secret-change-me' },
+            { key: 'MONGODB_URI', value: config.mongodb.uri },
+        ];
 
-    const missing = required
-        .filter(({ value, default: defaultValue }) => !value || value === defaultValue)
-        .map(({ key }) => key);
+        const missing = required
+            .filter(({ value, default: defaultValue }) => !value || value === defaultValue)
+            .map(({ key }) => key);
 
-    if (missing.length > 0) {
-        console.error('❌ FATAL ERROR: Missing required environment variables:');
-        missing.forEach(key => console.error(`   - ${key}`));
-        throw new Error(`Missing required configuration: ${missing.join(', ')}`);
+        if (missing.length > 0) {
+            console.error('❌ FATAL ERROR: Missing required environment variables:');
+            missing.forEach(key => console.error(`   - ${key}`));
+            throw new Error(`Missing required configuration: ${missing.join(', ')}`);
+        }
     }
-}
+};
 
 export default config;

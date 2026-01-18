@@ -1,8 +1,11 @@
 import 'dotenv/config';
+import config, { validateConfig } from './config';
+
+// Validate config immediately
+validateConfig();
 
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import createApp from './app';
-import config from './config';
 import { connectDatabase, disconnectDatabase } from './config/database';
 import { logger } from './utils/logger';
 import { closeQueues } from './queues';

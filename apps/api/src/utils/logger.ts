@@ -5,7 +5,7 @@ const isDevelopment = config.env === 'development';
 
 export const logger = pino({
     level: config.logging.level,
-    transport: isDevelopment
+    transport: process.env.NODE_ENV === 'development'
         ? {
             target: 'pino-pretty',
             options: {
