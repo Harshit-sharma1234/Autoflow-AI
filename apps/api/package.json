@@ -2,11 +2,11 @@
     "name": "@autoflow/api",
     "version": "1.0.0",
     "private": true,
-    "main": "./dist/index.js",
+    "main": "./dist/src/index.js",
     "scripts": {
         "dev": "tsx watch src/index.ts",
         "build": "tsc -b",
-        "start": "node dist/index.js",
+        "start": "node dist/src/index.js",
         "start:workers": "tsx src/workers/index.ts",
         "lint": "eslint src --ext .ts",
         "test": "jest",
