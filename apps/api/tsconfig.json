@@ -57,5 +57,10 @@
         "node_modules",
         "dist",
         "tests"
+    ],
+    "references": [
+        {
+            "path": "../../packages/shared"
+        }
     ]
 }
